@@ -284,6 +284,23 @@ exports['handle ServerRequest POST'] = function (test) {
     req.emit('end');
 };
 
+exports['handle empty ServerRequest POST'] = function (test) {
+    var f = forms.create({field1: forms.fields.string()}),
+        req = new http.IncomingMessage();
+    req.body = {};
+    req.method = 'POST';
+    f.handle(req, {
+        success: function (form) {
+            test.fail('success called after empty data');
+            test.done();
+        },
+        empty: function (form) {
+            test.done();
+        }
+    });
+    req.emit('end');
+};
+
 exports['handle ServerRequest POST with bodyDecoder'] = function (test) {
     var f = forms.create({field1: forms.fields.string()}),
         req = new http.IncomingMessage();
